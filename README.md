@@ -2,6 +2,8 @@
 
 前后端分离的软考刷题网页应用：Spring Boot 3 后端 + Vue 3 前端，支持多格式题库导入（Excel / JSON / PDF / Word）、AI 智能出题、四种题型刷题、错题本、收藏夹与学习统计。单用户本地使用，开箱即用。
 
+![app-screenshot.png](app-screenshot.png)
+
 ## 功能一览
 
 | 模块 | 说明 |
