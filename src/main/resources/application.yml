@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: ruankao
+  datasource:
+    # H2 文件模式：数据落盘到 ./data 目录，重启不丢失
+    url: jdbc:h2:file:./data/ruankao;MODE=MySQL;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 25MB
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+# AI 配置：兼容 OpenAI 接口规范的服务（如 DeepSeek），填入 api-key 即可启用 AI 能力
+ai:
+  base-url: https://api.deepseek.com
+  api-key: ""
+  model: deepseek-chat
+  temperature: 1.0
+  timeout-seconds: 180
+
+logging:
+  level:
+    org.example.ruankao: INFO
+    org.hibernate.SQL: WARN

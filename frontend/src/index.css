@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #app {
+    height: 100%;
+  }
+  body {
+    @apply bg-[#F5F7FA] text-[#1F2937] antialiased;
+    font-family: 'Source Han Sans SC', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+}
+
+@layer components {
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
+  }
+  .fade-slide-enter-active, .fade-slide-leave-active {
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .fade-slide-enter-from, .fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #C7D2FE; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #A5B4FC; }
+::-webkit-scrollbar-track { background: transparent; }

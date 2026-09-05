@@ -1,0 +1,834 @@
+[
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机组成与体系结构",
+    "type": "SINGLE",
+    "stem": "CPU 中负责执行算术运算和逻辑运算的部件是（ ）。",
+    "options": [
+      { "key": "A", "content": "控制器" },
+      { "key": "B", "content": "运算器" },
+      { "key": "C", "content": "寄存器组" },
+      { "key": "D", "content": "内部总线" }
+    ],
+    "answer": "B",
+    "analysis": "运算器（ALU）负责执行算术运算和逻辑运算；控制器负责取指令、分析指令和执行指令的协调控制；寄存器组用于暂存数据和指令。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机组成与体系结构",
+    "type": "SINGLE",
+    "stem": "某计算机主存按字节编址，地址范围为 0000H ~ 7FFFH，则主存容量为（ ）KB。",
+    "options": [
+      { "key": "A", "content": "16" },
+      { "key": "B", "content": "24" },
+      { "key": "C", "content": "32" },
+      { "key": "D", "content": "64" }
+    ],
+    "answer": "C",
+    "analysis": "地址范围 0000H~7FFFH 共 8000H = 32768 个地址单元，按字节编址即 32768B = 32KB。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机组成与体系结构",
+    "type": "JUDGE",
+    "stem": "Cache 的存在对程序员是透明的，程序员不需要在程序中显式地管理 Cache。",
+    "options": [],
+    "answer": "TRUE",
+    "analysis": "Cache 由硬件自动调度管理，其存在对程序员透明，程序员无需也无法直接操作 Cache。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "程序设计语言基础",
+    "type": "MULTIPLE",
+    "stem": "以下关于程序设计语言的说法中，正确的有（ ）。",
+    "options": [
+      { "key": "A", "content": "编译型语言在程序执行前将源代码整体翻译为目标代码" },
+      { "key": "B", "content": "解释型语言不生成独立的目标程序，逐句解释执行" },
+      { "key": "C", "content": "动态语言变量类型在编译期确定" },
+      { "key": "D", "content": "Python 属于解释型语言" }
+    ],
+    "answer": "ABD",
+    "analysis": "A、B 正确描述了编译与解释的区别；C 错误，动态语言的类型在运行期确定；D 正确，Python 是典型的解释型语言。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据结构与算法",
+    "type": "SINGLE",
+    "stem": "对长度为 n 的有序顺序表进行二分查找，最坏情况下的时间复杂度为（ ）。",
+    "options": [
+      { "key": "A", "content": "O(1)" },
+      { "key": "B", "content": "O(log n)" },
+      { "key": "C", "content": "O(n)" },
+      { "key": "D", "content": "O(n log n)" }
+    ],
+    "answer": "B",
+    "analysis": "二分查找每次将查找区间缩小一半，最坏情况下比较次数为 ⌈log₂(n+1)⌉，时间复杂度 O(log n)。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据结构与算法",
+    "type": "SINGLE",
+    "stem": "已知二叉树的后序遍历序列为 d e b c a，中序遍历序列为 d b e a c，则其前序遍历序列为（ ）。",
+    "options": [
+      { "key": "A", "content": "a b d e c" },
+      { "key": "B", "content": "a b c d e" },
+      { "key": "C", "content": "a d b e c" },
+      { "key": "D", "content": "a b e d c" }
+    ],
+    "answer": "A",
+    "analysis": "后序最后一个结点 a 为根；中序中 a 左侧 d b e 为左子树、右侧 c 为右子树。左子树后序 d e b：b 为左子树根，中序 d 在 b 左、e 在 b 右，故左子树前序为 b d e。整树前序为 a b d e c。",
+    "difficulty": 4,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "操作系统",
+    "type": "JUDGE",
+    "stem": "进程 P、Q 需要互斥访问临界资源时，只要使用同一个互斥信号量即可保证不会发生死锁。",
+    "options": [],
+    "answer": "FALSE",
+    "analysis": "死锁需要互斥、占有且等待、不可剥夺、循环等待四个条件同时成立。若进程持有信号量期间再申请其他资源并形成循环等待，仍可能死锁，因此该说法不成立。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "软件工程",
+    "type": "SINGLE",
+    "stem": "在软件测试中，白盒测试主要用于（ ）。",
+    "options": [
+      { "key": "A", "content": "验证软件功能是否符合需求规格说明" },
+      { "key": "B", "content": "检查程序的内部逻辑结构和路径覆盖情况" },
+      { "key": "C", "content": "由用户在实际使用环境中验证软件" },
+      { "key": "D", "content": "测试软件在异常输入下的健壮性" }
+    ],
+    "answer": "B",
+    "analysis": "白盒测试基于程序内部逻辑结构设计用例，关注语句覆盖、判定覆盖、路径覆盖等；A 是黑盒测试目标，C 是验收测试，D 属于黑盒测试范畴。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "软件工程",
+    "type": "MULTIPLE",
+    "stem": "下列关于软件维护类型的说法中，正确的有（ ）。",
+    "options": [
+      { "key": "A", "content": "改正性维护用于修复开发期未发现的错误" },
+      { "key": "B", "content": "适应性维护用于适应环境变化而修改软件" },
+      { "key": "C", "content": "完善性维护用于扩充功能、改善性能" },
+      { "key": "D", "content": "预防性维护是为了将来的可维护性而预先修改软件" }
+    ],
+    "answer": "ABCD",
+    "analysis": "软件维护分四类：改正性（纠错）、适应性（适应环境）、完善性（扩充功能与性能，占比最高）、预防性（为未来维护性改造），A、B、C、D 均正确。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "知识产权与标准化",
+    "type": "SINGLE",
+    "stem": "根据我国《著作权法》及相关规定，法人或其他组织的软件著作权保护期为（ ）。",
+    "options": [
+      { "key": "A", "content": "25 年" },
+      { "key": "B", "content": "50 年" },
+      { "key": "C", "content": "作者终生及死后 50 年" },
+      { "key": "D", "content": "永久保护" }
+    ],
+    "answer": "B",
+    "analysis": "法人或其他组织的软件著作权保护期为 50 年，自首次发表之日起计算；自然人的软件著作权保护期为终生及死后 50 年。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据库系统",
+    "type": "SINGLE",
+    "stem": "关系数据库中，消除非主属性对码的部分函数依赖的规范化过程是将关系模式规范为（ ）。",
+    "options": [
+      { "key": "A", "content": "1NF" },
+      { "key": "B", "content": "2NF" },
+      { "key": "C", "content": "3NF" },
+      { "key": "D", "content": "4NF" }
+    ],
+    "answer": "B",
+    "analysis": "1NF 消除重复组与非原子属性；2NF 在 1NF 基础上消除非主属性对码的部分函数依赖；3NF 进一步消除传递函数依赖。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "程序设计语言基础",
+    "type": "ESSAY",
+    "stem": "简述编译型语言与解释型语言的区别，并各举一例。",
+    "options": [],
+    "answer": "编译型语言在程序执行前由编译器将源代码一次性翻译为目标机器代码，生成可独立执行的目标程序，执行效率高，如 C、C++。解释型语言由解释器在运行时逐句读取、解释并执行源代码，不生成独立的目标程序，便于跨平台与交互式调试，但执行效率较低，如 Python、JavaScript。",
+    "analysis": "考查语言处理程序基础知识。编译：整体翻译生成目标程序，执行快；解释：逐句解释执行，跨平台性好。答题时需说明两者机制差异并举例。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机组成与体系结构",
+    "type": "SINGLE",
+    "stem": "以下关于 RISC 体系结构的描述中，错误的是（ ）。",
+    "options": [
+      { "key": "A", "content": "指令数量少、格式规整" },
+      { "key": "B", "content": "寻址方式较少" },
+      { "key": "C", "content": "大多数指令在一个时钟周期内完成" },
+      { "key": "D", "content": "指令功能复杂、长度不固定" }
+    ],
+    "answer": "D",
+    "analysis": "RISC（精简指令集计算机）强调指令数量少、长度固定、寻址方式简单，多数指令单周期执行；指令功能复杂、长度不固定是 CISC 的特点。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机组成与体系结构",
+    "type": "SINGLE",
+    "stem": "CPU 响应外部中断请求的时机通常是（ ）。",
+    "options": [
+      { "key": "A", "content": "任何时刻" },
+      { "key": "B", "content": "当前指令执行结束后" },
+      { "key": "C", "content": "当前程序段结束后" },
+      { "key": "D", "content": "操作系统重新启动后" }
+    ],
+    "answer": "B",
+    "analysis": "为保证指令执行的完整性，CPU 一般在当前指令执行结束后采样并响应中断请求。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机组成与体系结构",
+    "type": "SINGLE",
+    "stem": "Cache 与主存之间采用（ ）映像方式时，地址变换硬件实现最简单，但冲突率通常最高。",
+    "options": [
+      { "key": "A", "content": "直接映像" },
+      { "key": "B", "content": "全相联映像" },
+      { "key": "C", "content": "组相联映像" },
+      { "key": "D", "content": "段页式映像" }
+    ],
+    "answer": "A",
+    "analysis": "直接映像中主存块只能放入 Cache 的唯一位置，地址变换最简单，但容易发生块冲突；全相联映像最灵活但硬件复杂。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机组成与体系结构",
+    "type": "JUDGE",
+    "stem": "DMA 方式传送数据时，数据由 CPU 逐字节读入再写入外设。",
+    "options": [],
+    "answer": "FALSE",
+    "analysis": "DMA 方式下由 DMA 控制器接管总线并直接在主存与外设之间传送数据，CPU 只在传送开始和结束时参与，并非逐字节控制。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机组成与体系结构",
+    "type": "SINGLE",
+    "stem": "下列校验码中，能够检测并纠正一位错误的是（ ）。",
+    "options": [
+      { "key": "A", "content": "奇偶校验码" },
+      { "key": "B", "content": "循环冗余校验码" },
+      { "key": "C", "content": "海明码" },
+      { "key": "D", "content": "校验和" }
+    ],
+    "answer": "C",
+    "analysis": "奇偶校验只能检奇数位错；CRC 通常用于检错；海明码通过冗余校验位可以定位并纠正一位错误。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机组成与体系结构",
+    "type": "MULTIPLE",
+    "stem": "关于虚拟存储技术，下列说法正确的有（ ）。",
+    "options": [
+      { "key": "A", "content": "程序访问的局部性原理是虚拟存储能够实现的基础" },
+      { "key": "B", "content": "页面置换算法选择不当可能引起系统抖动" },
+      { "key": "C", "content": "虚拟存储器的容量不受外存容量限制" },
+      { "key": "D", "content": "缺页时需要将所需页面从外存调入主存" }
+    ],
+    "answer": "ABD",
+    "analysis": "虚拟存储器以局部性原理为基础；置换策略不当会造成频繁换页的抖动；发生缺页时需从外存调入。虚拟存储容量受 CPU 地址空间和外存容量共同限制，C 错误。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "操作系统",
+    "type": "SINGLE",
+    "stem": "下列状态中，不属于进程基本状态的是（ ）。",
+    "options": [
+      { "key": "A", "content": "运行态" },
+      { "key": "B", "content": "就绪态" },
+      { "key": "C", "content": "阻塞态" },
+      { "key": "D", "content": "提交态" }
+    ],
+    "answer": "D",
+    "analysis": "进程基本状态通常为运行、就绪和阻塞三态；提交态属于作业从输入到后备队列过程中的状态，不属于进程基本状态。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "操作系统",
+    "type": "SINGLE",
+    "stem": "某资源对应信号量 S 的当前值为 3，表示当前可用资源数为 3，则最多可以有（ ）个进程同时进入临界区而不被阻塞。",
+    "options": [
+      { "key": "A", "content": "1" },
+      { "key": "B", "content": "2" },
+      { "key": "C", "content": "3" },
+      { "key": "D", "content": "4" }
+    ],
+    "answer": "C",
+    "analysis": "资源信号量 S 的值表示当前可用资源数，S=3 时最多允许 3 个进程同时占有该资源，第 4 个进程申请时会阻塞等待。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "操作系统",
+    "type": "JUDGE",
+    "stem": "在分页存储管理中，页面大小通常由用户程序自行指定。",
+    "options": [],
+    "answer": "FALSE",
+    "analysis": "页面大小由操作系统或硬件存储系统决定，通常固定为 2 的整数次幂，用户程序无法自行指定。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "操作系统",
+    "type": "MULTIPLE",
+    "stem": "产生死锁的必要条件包括（ ）。",
+    "options": [
+      { "key": "A", "content": "资源互斥使用" },
+      { "key": "B", "content": "进程占有资源并等待其他资源" },
+      { "key": "C", "content": "已分配资源不可被剥夺" },
+      { "key": "D", "content": "存在循环等待链" }
+    ],
+    "answer": "ABCD",
+    "analysis": "死锁产生的四个必要条件：互斥、请求并保持、不可剥夺、循环等待。破坏其中任何一个即可预防死锁。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "操作系统",
+    "type": "SINGLE",
+    "stem": "银行家算法是著名的（ ）算法。",
+    "options": [
+      { "key": "A", "content": "死锁预防" },
+      { "key": "B", "content": "死锁避免" },
+      { "key": "C", "content": "死锁检测" },
+      { "key": "D", "content": "死锁解除" }
+    ],
+    "answer": "B",
+    "analysis": "银行家算法在资源分配前进行安全性检查，只有系统仍处于安全状态时才批准分配，属于死锁避免策略。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "操作系统",
+    "type": "ESSAY",
+    "stem": "简述程序访问的局部性原理，并说明其在虚拟存储系统中的作用。",
+    "options": [],
+    "answer": "程序访问的局部性包括时间局部性和空间局部性：时间局部性指刚访问过的数据很可能再次被访问；空间局部性指访问某地址后，附近地址很可能被访问。虚拟存储系统利用局部性，只在缺页时才将当前需要的页面调入主存，并在主存不足时淘汰不再使用的页面，从而以较小的内存开销运行较大程序。",
+    "analysis": "考查虚拟存储基础。应从时间局部性与空间局部性两方面说明，并联系按需调页与页面置换机制。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据库系统",
+    "type": "SINGLE",
+    "stem": "SQL 中，对分组后的结果进行条件筛选应使用（ ）子句。",
+    "options": [
+      { "key": "A", "content": "WHERE" },
+      { "key": "B", "content": "HAVING" },
+      { "key": "C", "content": "ORDER BY" },
+      { "key": "D", "content": "GROUP BY" }
+    ],
+    "answer": "B",
+    "analysis": "WHERE 用于分组前的行筛选，HAVING 用于对 GROUP BY 产生的分组进行筛选，ORDER BY 用于排序。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据库系统",
+    "type": "JUDGE",
+    "stem": "数据库中的视图可以限制用户只能看到基表中的部分数据，从而起到安全保护作用。",
+    "options": [],
+    "answer": "TRUE",
+    "analysis": "视图是对基表数据的一种逻辑映射，通过视图可以为不同用户提供限定列或限定行的数据访问方式，提高数据安全性。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据库系统",
+    "type": "MULTIPLE",
+    "stem": "数据库事务应具有 ACID 特性，其中主要包括（ ）。",
+    "options": [
+      { "key": "A", "content": "原子性：事务中的操作要么全部完成，要么全部回滚" },
+      { "key": "B", "content": "一致性：事务执行前后数据库都处于一致状态" },
+      { "key": "C", "content": "隔离性：并发事务之间相互隔离" },
+      { "key": "D", "content": "持久性：事务提交后修改被永久保存" }
+    ],
+    "answer": "ABCD",
+    "analysis": "ACID 即原子性、一致性、隔离性、持久性，是数据库事务正确执行的基本保证。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据库系统",
+    "type": "SINGLE",
+    "stem": "关系模式满足 BCNF（BC 范式）时，下列说法正确的是（ ）。",
+    "options": [
+      { "key": "A", "content": "仍可能存在非主属性对候选码的传递依赖" },
+      { "key": "B", "content": "主属性可以对候选码存在部分依赖" },
+      { "key": "C", "content": "每个非平凡函数依赖的决定因素都是超键" },
+      { "key": "D", "content": "一定不存在任何数据冗余" }
+    ],
+    "answer": "C",
+    "analysis": "BCNF 要求每个非平凡函数依赖 X→Y 中 X 都是超键，它比 3NF 更严格，但并不能完全消除所有冗余。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据库系统",
+    "type": "SINGLE",
+    "stem": "在数据库表中为经常作为查询条件的字段建立索引，其主要目的是（ ）。",
+    "options": [
+      { "key": "A", "content": "减少数据存储空间" },
+      { "key": "B", "content": "加快查询速度" },
+      { "key": "C", "content": "保证数据完整性" },
+      { "key": "D", "content": "避免数据冗余" }
+    ],
+    "answer": "B",
+    "analysis": "索引相当于数据的目录，可减少查询时扫描的数据量、加快检索速度；它会占用额外空间并在增删改时增加维护开销。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据结构与算法",
+    "type": "SINGLE",
+    "stem": "函数调用和递归程序通常使用（ ）来保存返回地址与现场信息。",
+    "options": [
+      { "key": "A", "content": "队列" },
+      { "key": "B", "content": "散列表" },
+      { "key": "C", "content": "栈" },
+      { "key": "D", "content": "二叉排序树" }
+    ],
+    "answer": "C",
+    "analysis": "函数调用遵循后进先出的调用顺序，使用栈保存返回地址、局部变量与调用现场。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据结构与算法",
+    "type": "JUDGE",
+    "stem": "对二叉排序树进行中序遍历可以得到递增有序序列。",
+    "options": [],
+    "answer": "TRUE",
+    "analysis": "二叉排序树满足左子树所有结点小于根、右子树所有结点大于根，因此中序遍历结果按关键字递增排列。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据结构与算法",
+    "type": "SINGLE",
+    "stem": "图的深度优先遍历通常借助（ ）实现。",
+    "options": [
+      { "key": "A", "content": "栈" },
+      { "key": "B", "content": "队列" },
+      { "key": "C", "content": "循环链表" },
+      { "key": "D", "content": "双端队列" }
+    ],
+    "answer": "A",
+    "analysis": "深度优先遍历需要沿当前路径回溯到最近未访问结点，使用栈记录访问路径；广度优先遍历则使用队列。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据结构与算法",
+    "type": "MULTIPLE",
+    "stem": "关于图的邻接矩阵存储结构，下列说法正确的有（ ）。",
+    "options": [
+      { "key": "A", "content": "无向图的邻接矩阵一定是对称矩阵" },
+      { "key": "B", "content": "有向图的邻接矩阵不一定对称" },
+      { "key": "C", "content": "邻接矩阵适合存储边数较多的稠密图" },
+      { "key": "D", "content": "无权图邻接矩阵元素可用 0/1 表示" }
+    ],
+    "answer": "ABCD",
+    "analysis": "无向图边 (i,j) 与 (j,i) 同时存在，故矩阵对称；有向图不一定对称。邻接矩阵空间固定为 n²，稠密图下空间利用率较高，无权图可只用 0/1。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据结构与算法",
+    "type": "SINGLE",
+    "stem": "快速排序在平均情况下的时间复杂度为（ ）。",
+    "options": [
+      { "key": "A", "content": "O(n)" },
+      { "key": "B", "content": "O(n log n)" },
+      { "key": "C", "content": "O(n²)" },
+      { "key": "D", "content": "O(log n)" }
+    ],
+    "answer": "B",
+    "analysis": "快速排序平均情况为 O(n log n)；当基准划分极不平衡（如原序列基本有序）时最坏情况退化为 O(n²)。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "数据结构与算法",
+    "type": "ESSAY",
+    "stem": "简述贪心算法与动态规划的主要区别。",
+    "options": [],
+    "answer": "贪心算法在每一步做出当前看起来最优的选择，并期望局部最优能导出全局最优，通常不能保证得到全局最优解；动态规划将问题分解为重叠子问题，保存子问题结果并由底向上或记忆化求解，能保证求得全局最优解。适用时贪心效率更高，动态规划更适合具有最优子结构与重叠子问题的优化问题。",
+    "analysis": "考查算法设计思想。重点说明贪心只做局部最优决策且不回溯，动态规划利用子问题重叠与最优子结构保证全局最优。",
+    "difficulty": 4,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "程序设计语言基础",
+    "type": "SINGLE",
+    "stem": "编译过程中，词法分析器输出的结果是（ ）。",
+    "options": [
+      { "key": "A", "content": "语法分析后的语法树" },
+      { "key": "B", "content": "单词符号（记号）序列" },
+      { "key": "C", "content": "中间代码" },
+      { "key": "D", "content": "目标机器代码" }
+    ],
+    "answer": "B",
+    "analysis": "词法分析阶段从左到右扫描源程序，将字符序列转换为标识符、关键字、运算符等单词记号序列，供语法分析使用。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "程序设计语言基础",
+    "type": "JUDGE",
+    "stem": "采用值传递（传值调用）时，将实参的值复制给形参，函数内对形参的修改不会影响实参。",
+    "options": [],
+    "answer": "TRUE",
+    "analysis": "传值调用只在形参和实参之间传递值副本，函数内修改形参不改变调用方实参变量；引用传递则会受影响。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "程序设计语言基础",
+    "type": "MULTIPLE",
+    "stem": "关于方法重载与方法重写，下列说法正确的有（ ）。",
+    "options": [
+      { "key": "A", "content": "重写要求子类方法与父类方法同名且参数列表相同" },
+      { "key": "B", "content": "重载只发生在有继承关系的类之间" },
+      { "key": "C", "content": "重写属于编译时多态" },
+      { "key": "D", "content": "重载允许返回值不同，但参数列表必须不同" }
+    ],
+    "answer": "AD",
+    "analysis": "重写是子类以相同签名覆盖父类方法，属于运行时多态；重载发生在同一类中，参数列表必须不同。A、D 正确。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "软件工程",
+    "type": "SINGLE",
+    "stem": "瀑布模型比较适用于（ ）的软件开发项目。",
+    "options": [
+      { "key": "A", "content": "需求明确且开发过程中变化较少" },
+      { "key": "B", "content": "用户需求模糊、需要快速迭代" },
+      { "key": "C", "content": "纯探索性的研究项目" },
+      { "key": "D", "content": "需要频繁响应用户反馈的原型项目" }
+    ],
+    "answer": "A",
+    "analysis": "瀑布模型按需求分析、设计、编码、测试等阶段顺序推进，阶段间反馈有限，适合需求明确、变更少的项目。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "软件工程",
+    "type": "SINGLE",
+    "stem": "软件需求分析阶段的主要产物是（ ）。",
+    "options": [
+      { "key": "A", "content": "软件需求规格说明书" },
+      { "key": "B", "content": "概要设计说明书" },
+      { "key": "C", "content": "详细设计说明书" },
+      { "key": "D", "content": "用户操作手册" }
+    ],
+    "answer": "A",
+    "analysis": "需求分析以需求规格说明书作为主要交付物，明确系统功能与非功能需求，是后续设计与测试的依据。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "软件工程",
+    "type": "JUDGE",
+    "stem": "黑盒测试只依据软件的外部功能与规格说明设计测试用例，不需要了解程序内部结构。",
+    "options": [],
+    "answer": "TRUE",
+    "analysis": "黑盒测试把程序看作黑盒，根据输入输出及需求规格设计用例；白盒测试才需要分析内部逻辑结构。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "软件工程",
+    "type": "MULTIPLE",
+    "stem": "按照测试阶段划分，软件测试通常包括（ ）。",
+    "options": [
+      { "key": "A", "content": "单元测试" },
+      { "key": "B", "content": "集成测试" },
+      { "key": "C", "content": "系统测试" },
+      { "key": "D", "content": "验收测试" }
+    ],
+    "answer": "ABCD",
+    "analysis": "软件测试按层次通常依次进行单元测试、集成测试、系统测试和验收测试，规模与集成度逐步扩大。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "软件工程",
+    "type": "ESSAY",
+    "stem": "简述黑盒测试与白盒测试的主要区别。",
+    "options": [],
+    "answer": "黑盒测试又称功能测试，不关心程序内部实现，依据需求规格说明设计输入并检查输出是否符合预期；白盒测试又称结构测试，基于程序内部逻辑结构设计用例，关注语句、分支、路径等覆盖情况。黑盒测试侧重功能正确性，白盒测试侧重代码逻辑与覆盖充分性。",
+    "analysis": "考查测试基础概念。黑盒关注外部功能，白盒关注内部结构，两者常结合使用。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "面向对象技术",
+    "type": "SINGLE",
+    "stem": "类 B 继承类 A，可以认为 B 与 A 之间建立了（ ）关系。",
+    "options": [
+      { "key": "A", "content": "is-a（是一种）" },
+      { "key": "B", "content": "has-a（有一个）" },
+      { "key": "C", "content": "use-a（使用一个）" },
+      { "key": "D", "content": "part-of（组成部分）" }
+    ],
+    "answer": "A",
+    "analysis": "继承表达一般化/特殊化关系，子类是父类的一种，即 is-a 关系；组合、聚合等表达 has-a/part-of 关系。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "面向对象技术",
+    "type": "SINGLE",
+    "stem": "UML 中，用于描述系统外部参与者与系统功能之间交互的图是（ ）。",
+    "options": [
+      { "key": "A", "content": "类图" },
+      { "key": "B", "content": "用例图" },
+      { "key": "C", "content": "时序图" },
+      { "key": "D", "content": "状态图" }
+    ],
+    "answer": "B",
+    "analysis": "用例图以参与者和用例为核心，从用户视角描述系统提供的功能及外部交互；时序图、状态图侧重动态行为细节。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "面向对象技术",
+    "type": "JUDGE",
+    "stem": "封装是指将对象的属性和操作这些属性的方法结合在一起，并对外隐藏内部实现细节。",
+    "options": [],
+    "answer": "TRUE",
+    "analysis": "封装把数据与行为绑定并通过接口对外提供访问，隐藏内部状态与实现细节，是面向对象三大特性之一。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "面向对象技术",
+    "type": "MULTIPLE",
+    "stem": "面向对象方法的主要特征包括（ ）。",
+    "options": [
+      { "key": "A", "content": "封装" },
+      { "key": "B", "content": "继承" },
+      { "key": "C", "content": "多态" },
+      { "key": "D", "content": "抽象" }
+    ],
+    "answer": "ABCD",
+    "analysis": "面向对象基本特征通常包括封装、继承、多态与抽象，这些特性共同支持软件复用和灵活扩展。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "面向对象技术",
+    "type": "SINGLE",
+    "stem": "观察者（Observer）设计模式定义了对象之间（ ）的依赖关系，使一个对象变化时能自动通知其他对象。",
+    "options": [
+      { "key": "A", "content": "一对一" },
+      { "key": "B", "content": "一对多" },
+      { "key": "C", "content": "多对多" },
+      { "key": "D", "content": "完全独立" }
+    ],
+    "answer": "B",
+    "analysis": "观察者模式维护一组观察者，当被观察对象状态改变时自动通知所有观察者，属于一对多的发布订阅关系。",
+    "difficulty": 3,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机网络",
+    "type": "SINGLE",
+    "stem": "OSI 参考模型中，路由器主要工作在（ ）。",
+    "options": [
+      { "key": "A", "content": "物理层" },
+      { "key": "B", "content": "数据链路层" },
+      { "key": "C", "content": "网络层" },
+      { "key": "D", "content": "传输层" }
+    ],
+    "answer": "C",
+    "analysis": "路由器依据 IP 地址选择路由并转发分组，工作在网络层；交换机通常工作在数据链路层。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机网络",
+    "type": "SINGLE",
+    "stem": "下列 IP 地址中，属于私有地址的是（ ）。",
+    "options": [
+      { "key": "A", "content": "172.16.1.10" },
+      { "key": "B", "content": "202.96.134.133" },
+      { "key": "C", "content": "8.8.8.8" },
+      { "key": "D", "content": "114.114.114.114" }
+    ],
+    "answer": "A",
+    "analysis": "私有地址范围包括 10.0.0.0/8、172.16.0.0/12 和 192.168.0.0/16，172.16.1.10 属于私有地址。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机网络",
+    "type": "JUDGE",
+    "stem": "HTTP 协议是无状态协议，服务器默认不会在多个请求之间自动保留用户状态。",
+    "options": [],
+    "answer": "TRUE",
+    "analysis": "HTTP 每个请求相对独立，服务器默认不记忆此前请求的状态；实际应用中常通过 Cookie、Session 或 Token 扩展状态管理。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机网络",
+    "type": "SINGLE",
+    "stem": "TCP 使用三次握手的主要目的是（ ）。",
+    "options": [
+      { "key": "A", "content": "完成数据加密协商" },
+      { "key": "B", "content": "确认双方收发能力并建立连接" },
+      { "key": "C", "content": "释放已建立的连接" },
+      { "key": "D", "content": "调整发送窗口大小" }
+    ],
+    "answer": "B",
+    "analysis": "TCP 三次握手用于同步序列号、确认双方能够正常收发，从而可靠地建立连接；四次挥手用于释放连接。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "计算机网络",
+    "type": "MULTIPLE",
+    "stem": "关于 TCP 与 UDP 协议，下列说法正确的有（ ）。",
+    "options": [
+      { "key": "A", "content": "TCP 面向连接并提供可靠传输" },
+      { "key": "B", "content": "TCP 具有流量控制和拥塞控制机制" },
+      { "key": "C", "content": "UDP 无连接、首部开销小、传输效率高" },
+      { "key": "D", "content": "UDP 常用于实时音视频等对时延敏感的应用" }
+    ],
+    "answer": "ABCD",
+    "analysis": "TCP 面向连接、可靠、有流控与拥塞控制；UDP 无连接、开销低，适合实时性要求高或可容忍少量丢失的应用。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "信息安全",
+    "type": "SINGLE",
+    "stem": "下列加密算法中，属于对称加密算法的是（ ）。",
+    "options": [
+      { "key": "A", "content": "DES" },
+      { "key": "B", "content": "RSA" },
+      { "key": "C", "content": "ECC" },
+      { "key": "D", "content": "DSA" }
+    ],
+    "answer": "A",
+    "analysis": "DES、3DES、AES 是对称加密算法，加解密使用同一密钥；RSA、ECC、DSA 属于公钥密码体系。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "信息安全",
+    "type": "SINGLE",
+    "stem": "数字签名中，发送方进行签名时应使用（ ）。",
+    "options": [
+      { "key": "A", "content": "接收方公钥" },
+      { "key": "B", "content": "发送方私钥" },
+      { "key": "C", "content": "双方共享的对称密钥" },
+      { "key": "D", "content": "临时会话密钥" }
+    ],
+    "answer": "B",
+    "analysis": "数字签名用发送方私钥对消息摘要签名，接收方用发送方公钥验证，从而保证消息来源、完整性与不可否认性。",
+    "difficulty": 2,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "信息安全",
+    "type": "JUDGE",
+    "stem": "部署了防火墙后，网络内部的所有安全威胁都可以被彻底阻止。",
+    "options": [],
+    "answer": "FALSE",
+    "analysis": "防火墙主要在网络边界进行访问控制，对来自内部人员的滥用、绕过边界通道等威胁作用有限，不能代替主机安全与管理制度。",
+    "difficulty": 1,
+    "source": "内置示例"
+  },
+  {
+    "subject": "软件设计师",
+    "chapter": "知识产权与标准化",
+    "type": "ESSAY",
+    "stem": "简述我国计算机软件著作权的保护期规定。",
+    "options": [],
+    "answer": "自然人的软件著作权保护期为作者终生及其死亡后 50 年，截止于作者死亡后第 50 年的 12 月 31 日；合作开发的软件，截止于最后死亡作者死亡后第 50 年。由法人或其他组织享有著作权的软件，保护期为 50 年，自软件首次发表之日起计算。",
+    "analysis": "考查知识产权基本规定。自然人作品按作者终生加死后 50 年，法人作品自首次发表起 50 年。",
+    "difficulty": 3,
+    "source": "内置示例"
+  }
+]
