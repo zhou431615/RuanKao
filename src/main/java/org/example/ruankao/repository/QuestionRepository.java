@@ -16,6 +16,8 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, JpaSp
 
     long countBySubjectId(Long subjectId);
 
+    List<Question> findBySubjectId(Long subjectId);
+
     long countByChapterId(Long chapterId);
 
     long countBySubjectIdAndType(Long subjectId, QuestionType type);

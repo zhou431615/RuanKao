@@ -77,7 +77,12 @@ public class QuestionService {
                 Sort.by(Sort.Direction.DESC, "id"));
         Specification<Question> spec = buildSpec(filter);
         Page<Question> result = questionRepository.findAll(spec, pageable);
-        List<QuestionDtos.ListItem> items = result.getContent().stream().map(this::toListItem).toList();
+        List<Long> questionIds = result.getContent().stream().map(Question::getId).toList();
+        Set<Long> wrongIds = questionIds.isEmpty() ? Set.of() : wrongQuestionRepository.findQuestionIdsByIdIn(questionIds);
+        Set<Long> favoriteIds = questionIds.isEmpty() ? Set.of() : favoriteRepository.findQuestionIdsByIdIn(questionIds);
+        List<QuestionDtos.ListItem> items = result.getContent().stream()
+                .map(q -> toListItem(q, wrongIds, favoriteIds))
+                .toList();
         return new QuestionDtos.PageResponse<>(items, result.getTotalElements(), page, size);
     }
 
@@ -159,22 +164,44 @@ public class QuestionService {
             case "favorite" -> fetchFromFavorite(request, random, limit);
             default -> fetchFromBank(request, random, limit);
         };
-        return questions.stream().map(this::toListItem).toList();
+        List<Long> questionIds = questions.stream().map(Question::getId).toList();
+        Set<Long> wrongIds = questionIds.isEmpty() ? Set.of() : wrongQuestionRepository.findQuestionIdsByIdIn(questionIds);
+        Set<Long> favoriteIds = questionIds.isEmpty() ? Set.of() : favoriteRepository.findQuestionIdsByIdIn(questionIds);
+        return questions.stream().map(q -> toListItem(q, wrongIds, favoriteIds)).toList();
     }
 
     private List<Question> fetchFromBank(QuestionDtos.PracticeRequest request, boolean random, int limit) {
-        List<Question> questions = questionRepository.findAll((root, query, cb) -> {
+        Specification<Question> spec = buildPracticeSpec(request.subjectId(), request.chapterId(), request.type());
+        if (random) {
+            List<Long> ids = questionRepository.findAll(spec).stream()
+                    .map(Question::getId)
+                    .collect(Collectors.toList());
+            java.util.Collections.shuffle(ids);
+            List<Long> selectedIds = ids.stream().limit(limit).toList();
+            List<Question> result = questionRepository.findByIdIn(selectedIds);
+            result.sort((a, b) -> { // 保持洗牌顺序
+                int idxA = selectedIds.indexOf(a.getId());
+                int idxB = selectedIds.indexOf(b.getId());
+                return Integer.compare(idxA, idxB);
+            });
+            return result;
+        }
+        return questionRepository.findAll(spec, PageRequest.of(0, limit, Sort.by(Sort.Direction.ASC, "id")))
+                .getContent();
+    }
+
+    private Specification<Question> buildPracticeSpec(Long subjectId, Long chapterId, QuestionType type) {
+        return (root, query, cb) -> {
             List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
-            predicates.add(cb.equal(root.get("subject").get("id"), request.subjectId()));
-            if (request.chapterId() != null) {
-                predicates.add(cb.equal(root.get("chapter").get("id"), request.chapterId()));
+            predicates.add(cb.equal(root.get("subject").get("id"), subjectId));
+            if (chapterId != null) {
+                predicates.add(cb.equal(root.get("chapter").get("id"), chapterId));
             }
-            if (request.type() != null) {
-                predicates.add(cb.equal(root.get("type"), request.type()));
+            if (type != null) {
+                predicates.add(cb.equal(root.get("type"), type));
             }
             return cb.and(predicates.toArray(new jakarta.persistence.criteria.Predicate[0]));
-        });
-        return limitAndShuffle(questions, random, limit);
+        };
     }
 
     private List<Question> fetchFromWrongBook(QuestionDtos.PracticeRequest request, boolean random, int limit) {
@@ -334,6 +361,18 @@ public class QuestionService {
     }
 
     private QuestionDtos.ListItem toListItem(Question question) {
+        return toListItem(question,
+                wrongQuestionRepository.existsByQuestionId(question.getId()),
+                favoriteRepository.existsByQuestionId(question.getId()));
+    }
+
+    private QuestionDtos.ListItem toListItem(Question question, Set<Long> wrongIds, Set<Long> favoriteIds) {
+        return toListItem(question,
+                wrongIds.contains(question.getId()),
+                favoriteIds.contains(question.getId()));
+    }
+
+    private QuestionDtos.ListItem toListItem(Question question, boolean wrong, boolean favorite) {
         return new QuestionDtos.ListItem(
                 question.getId(),
                 question.getSubject().getId(),
@@ -345,8 +384,8 @@ public class QuestionService {
                 question.getOptions(),
                 question.getDifficulty(),
                 question.getSource(),
-                wrongQuestionRepository.existsByQuestionId(question.getId()),
-                favoriteRepository.existsByQuestionId(question.getId())
+                wrong,
+                favorite
         );
     }
 

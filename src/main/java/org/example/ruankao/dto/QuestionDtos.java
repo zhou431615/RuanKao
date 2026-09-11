@@ -59,7 +59,7 @@ public final class QuestionDtos {
     /** 提交单题作答请求 */
     public record SubmitRequest(
             @NotNull(message = "题目ID不能为空") Long questionId,
-            @NotBlank(message = "作答内容不能为空") String userAnswer,
+            String userAnswer,
             /** 主观题自评得分 0-100 */
             @Min(0) @Max(100) Integer selfScore) {
     }

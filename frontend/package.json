@@ -2,11 +2,59 @@
   "name": "ruankao-frontend",
   "private": true,
   "version": "1.0.0",
-  "type": "module",
+  "description": "软考刷题 - 计算机技术与软件专业技术资格考试刷题工具",
+  "author": "千叶",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
+    "electron:build": "vite build && electron-builder",
+    "electron:build:win": "vite build && electron-builder --win",
+    "electron:build:mac": "vite build && electron-builder --mac",
+    "electron:build:linux": "vite build && electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.ruankao.app",
+    "productName": "软考刷题",
+    "copyright": "Copyright © 2025 千叶",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../build/libs/RuanKao-1.0.0.jar",
+        "to": "backend/RuanKao-1.0.0.jar"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "electron/icon.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "electron/icon.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "electron/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   },
   "dependencies": {
     "@lucide/vue": "^1.40.0",
@@ -21,8 +69,13 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.4",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^10.0.5",
+    "cross-env": "^10.1.0",
+    "electron": "^44.3.0",
+    "electron-builder": "^26.15.3",
     "postcss": "^8.5.0",
     "tailwindcss": "3.4.17",
-    "vite": "^5.4.10"
+    "vite": "^5.4.10",
+    "wait-on": "^9.1.0"
   }
 }

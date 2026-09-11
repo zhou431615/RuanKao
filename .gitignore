@@ -9,6 +9,8 @@ data/
 ### Node / Frontend ###
 frontend/node_modules/
 frontend/dist/
+frontend/release/
+frontend/electron/icon.png
 .run/
 
 ### IntelliJ IDEA ###

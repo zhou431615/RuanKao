@@ -34,9 +34,7 @@ public class ExportService {
     public byte[] exportJson(Long subjectId) {
         List<Question> questions = subjectId == null
                 ? questionRepository.findAll()
-                : questionRepository.findAll().stream()
-                        .filter(q -> q.getSubject().getId().equals(subjectId))
-                        .toList();
+                : questionRepository.findBySubjectId(subjectId);
 
         List<ImportDtos.JsonQuestion> items = questions.stream().map(this::toJsonQuestion).toList();
         try {

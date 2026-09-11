@@ -137,8 +137,8 @@ Windows PowerShell 下可在项目根目录执行：
 
 ## 环境要求
 
-- JDK 17+
-- Node.js 18+
+- JDK 17+（浏览器方式用于运行后端；桌面客户端运行时同样需要，客户端会自动探测）
+- Node.js 18+（前端开发/打包）
 
 ## 快速启动
 
@@ -170,6 +170,68 @@ npm run dev
 - 密码：`admin123`
 
 登录后可通过右上角用户菜单修改密码。
+
+## 桌面客户端（Electron）
+
+`frontend/` 同时是一个 Electron 应用：打包后自动拉起后端 JAR 与本地静态服务，双击即用，无需手动启动两个服务。
+
+### 开发模式（保留热更新）
+
+```powershell
+cd frontend
+npm run electron:dev
+```
+
+并行启动 Vite（5173）与 Electron，Electron 直接加载 `http://localhost:5173`；后端仍需按「快速启动」单独运行。
+
+### 打包
+
+前置条件：必须先构建后端 JAR，否则打包缺少 `build/libs/RuanKao-1.0.0.jar`。
+
+```powershell
+.\gradlew.bat build -x test      # 生成 build/libs/RuanKao-1.0.0.jar
+cd frontend
+npm install
+npm run electron:build:win       # Windows 安装包
+```
+
+| 命令 | 说明 | 产物 |
+| ---- | ---- | ---- |
+| `npm run electron:build` | 当前平台完整安装包 | `frontend/release/` |
+| `npm run electron:build:win` | Windows NSIS 安装包 | `frontend/release/软考刷题 Setup 1.0.0.exe` |
+| `npm run electron:build:mac` | macOS dmg | `frontend/release/` |
+| `npm run electron:build:linux` | Linux AppImage | `frontend/release/` |
+| `npx electron-builder --dir --win` | 仅生成免安装目录（调试用，速度快） | `frontend/release/win-unpacked/软考刷题.exe` |
+
+### 部署
+
+1. 拷贝 `软考刷题 Setup 1.0.0.exe` 到目标机器，双击安装（可自选目录）。
+2. 目标机器需 **JDK 17+**，客户端按以下顺序自动探测：
+
+   - `%JAVA_HOME%` / `%JDK_HOME%`
+   - `%USERPROFILE%\.jdks`、`.gradle\jdks`（IDEA 下载的 JDK）
+   - `C:\Program Files\Java`、Amazon Corretto、Eclipse Adoptium、Microsoft、BellSoft、Zulu、GraalVM
+   - 注册表 `HKLM\SOFTWARE\JavaSoft` 与 PATH 中的 `java`
+   - 探测结果缓存到 `%APPDATA%\ruankao-frontend\.java-path.cache`，下次启动直接使用
+
+3. 首次启动自动建库并导入 57 道示例题；数据与日志都在用户目录，重装/升级不丢失。
+
+| 路径 | 内容 |
+| ---- | ---- |
+| `%APPDATA%\ruankao-frontend\data` | H2 数据库（`ruankao.mv.db`） |
+| `%APPDATA%\ruankao-frontend\app.log` | 客户端 + 后端合并日志 |
+| `%APPDATA%\ruankao-frontend\error-page.html` | 启动失败时展示的错误页 |
+
+### 启动失败排查
+
+客户端不会静默退出：后端或本地服务启动失败、后端就绪超时，都会显示内置错误页，列出原因、最近日志与日志路径，并支持「重新尝试启动」原地恢复，无需重装。
+
+| 现象 | 原因 | 处理 |
+| ---- | ---- | ---- |
+| 错误页「未找到 Java 17+」 | 目标机器无 JDK 17+ | 安装 Amazon Corretto 21 后点「重新尝试启动」 |
+| 错误页「后端启动超时」 | 端口 8080 被占用 / Java 版本过低 | 结束占用 8080 的进程后重新尝试 |
+| 看不到界面、只有后台进程 | 旧版本启动失败即退出 | 升级到当前版本；升级后仍有异常按上一行排查 |
+| 需要完整过程 | — | 打开 `%APPDATA%\ruankao-frontend\app.log` |
 
 ## AI 能力配置（可选）
 
@@ -225,12 +287,25 @@ ai:
 ## 常用命令
 
 ```powershell
-.\gradlew.bat bootRun          # 启动后端
-.\gradlew.bat build            # 构建后端（含测试）
-cd frontend; npm run build     # 前端生产构建（产物在 frontend/dist）
+.\gradlew.bat bootRun                       # 启动后端
+.\gradlew.bat build -x test                 # 构建后端 JAR（桌面端打包前置）
+cd frontend; npm run build                  # 前端生产构建（产物在 frontend/dist）
+cd frontend; npm run electron:build:win     # 打包 Windows 桌面客户端
+cd frontend; npm run electron:dev           # 桌面客户端开发模式（热更新）
 ```
 
 ## 技术栈
 
 - 后端：Java 17 - Spring Boot 3.5 - Spring Data JPA - H2 - Springdoc OpenAPI - Apache POI - PDFBox - Lombok
 - 前端：Vue 3 - Vite 5 - Element Plus - Pinia - Vue Router - Axios - ECharts - Tailwind CSS - @lucide/vue
+- 桌面端：Electron 44 - electron-builder 26（NSIS / dmg / AppImage）
+
+## 更新特点
+
+### 桌面客户端启动可靠性（当前版本）
+
+- **Java 探测**：探测超时 3s → 10s，`spawnSync` 失败自动回退 `cmd` 执行；新增注册表、`where java`、`Contents/Home/bin`、`jre/bin`、Scoop 等扫描路径；探测失败写 WARN 日志便于定位。
+- **不再静默退出**：后端启动失败、本地服务启动失败、后端就绪超时，都会显示内置错误页（原因 + 最近日志 + 日志路径），提供「重新尝试启动 / 打开日志文件 / 退出」，可原地恢复。
+- **窗口可见性兜底**：`did-finish-load`、`did-fail-load`、8 秒超时三重触发显示，杜绝「进程在后台但没有界面」。
+- **统一异常捕获**：启动流程整体 try/catch，未预期异常也落到可见错误页而非无声退出。
+- **错误页支持重试**：修复问题（如刚装好 JDK、释放 8080 端口）后点「重新尝试启动」即可继续。
