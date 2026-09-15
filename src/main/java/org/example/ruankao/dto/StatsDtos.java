@@ -12,7 +12,8 @@ public final class StatsDtos {
 
     /** 顶部总览 */
     public record Overview(long totalQuestions, long totalAnswered, long totalCorrect,
-                           double accuracy, long todayAnswered, long todayCorrect, long wrongCount) {
+                           double accuracy, long todayAnswered, long todayCorrect, long wrongCount,
+                           long answeredQuestions) {
     }
 
     /** 每日趋势点 */

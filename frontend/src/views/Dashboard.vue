@@ -9,6 +9,20 @@
         <PencilLine class="w-4 h-4 mr-1.5" /> 开始刷题
       </el-button>
     </div>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <div class="text-sm text-gray-500">距离{{ examDateLabel }}</div>
+        <div class="text-xl font-semibold text-gray-900 mt-1">{{ countdownText }}</div>
+      </div>
+      <div class="grid grid-cols-4 gap-2 text-center">
+        <div v-for="item in countdownUnits" :key="item.label" class="min-w-16 rounded-xl bg-indigo-50 px-3 py-2">
+          <div class="text-xl font-bold text-primary">{{ item.value }}</div>
+          <div class="text-[11px] text-gray-500">{{ item.label }}</div>
+        </div>
+      </div>
+    </div>
+
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
       <div v-for="card in cards" :key="card.label" class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 card-hover">
         <div class="flex items-center justify-between mb-3">
@@ -57,23 +71,75 @@
 <script setup>
 defineOptions({ name: 'Dashboard' })
 
-import { computed, onActivated, onMounted, ref } from 'vue'
+import { computed, onActivated, onBeforeUnmount, onDeactivated, onMounted, ref } from 'vue'
 import api from '../api'
 import { useAppStore } from '../stores/app'
 import { PencilLine, Database, CheckCircle2, Target, AlertCircle, BookOpen } from '@lucide/vue'
 
 const store = useAppStore()
 const stats = ref(null)
+const now = ref(Date.now())
+let countdownTimer = null
+
+const examDateLabel = computed(() => examTarget.value.getFullYear() + '年下半年软考（10月24日）')
+
+const examTarget = computed(() => {
+  const nowDate = new Date()
+  let target = new Date(nowDate.getFullYear(), 9, 24, 0, 0, 0)
+  if (target <= nowDate) target = new Date(nowDate.getFullYear() + 1, 9, 24, 0, 0, 0)
+  return target
+})
+
+const countdown = computed(() => {
+  let diff = Math.max(0, examTarget.value.getTime() - now.value)
+  const days = Math.floor(diff / 86400000)
+  diff -= days * 86400000
+  const hours = Math.floor(diff / 3600000)
+  diff -= hours * 3600000
+  const minutes = Math.floor(diff / 60000)
+  diff -= minutes * 60000
+  const seconds = Math.floor(diff / 1000)
+  return { days, hours, minutes, seconds }
+})
+
+const countdownUnits = computed(() => [
+  { label: '天', value: String(countdown.value.days).padStart(2, '0') },
+  { label: '时', value: String(countdown.value.hours).padStart(2, '0') },
+  { label: '分', value: String(countdown.value.minutes).padStart(2, '0') },
+  { label: '秒', value: String(countdown.value.seconds).padStart(2, '0') }
+])
+
+const countdownText = computed(() => countdown.value.days > 0
+  ? '还有 ' + countdown.value.days + ' 天，继续稳住节奏'
+  : '考试即将开始，检查准考证和文具')
+
+function startCountdown() {
+  clearCountdown()
+  now.value = Date.now()
+  countdownTimer = setInterval(() => { now.value = Date.now() }, 1000)
+}
+
+function clearCountdown() {
+  if (countdownTimer) {
+    clearInterval(countdownTimer)
+    countdownTimer = null
+  }
+}
 
 onMounted(async () => {
+  startCountdown()
   await store.loadSubjects(true).catch(() => {})
   stats.value = await api.stats()
 })
 
 onActivated(async () => {
+  startCountdown()
   await store.loadSubjects(true).catch(() => {})
   stats.value = await api.stats().catch(() => stats.value)
 })
+
+onDeactivated(clearCountdown)
+onBeforeUnmount(clearCountdown)
 
 const cards = computed(() => {
   const o = stats.value?.overview || {}

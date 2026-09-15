@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public interface PracticeRecordRepository extends JpaRepository<PracticeRecord, Long> {
@@ -30,6 +31,14 @@ public interface PracticeRecordRepository extends JpaRepository<PracticeRecord, 
     long countByAnsweredAtAfter(LocalDateTime since);
 
     long countByCorrectTrueAndAnsweredAtAfter(LocalDateTime since);
+
+    /** 全局已完成题目数（按题目去重） */
+    @Query("select count(distinct r.question.id) from PracticeRecord r")
+    long countDistinctQuestionIds();
+
+    /** 指定题目集合的作答次数（用于标记已做过与重复次数） */
+    @Query("select r.question.id, count(r) from PracticeRecord r where r.question.id in :ids group by r.question.id")
+    List<Object[]> countByQuestionIdIn(@Param("ids") Collection<Long> ids);
 
     /** 各科目已刷题目数（去重）、累计答题数与正确数 */
     @Query("select q.subject.id, count(distinct r.question.id), count(r), " +

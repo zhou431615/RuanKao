@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-5">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
       <div v-for="c in cards" :key="c.label" class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 card-hover">
         <div class="text-sm text-gray-500 mb-2">{{ c.label }}</div>
         <div class="text-2xl font-bold" :class="c.color">{{ c.value }}</div>
@@ -23,6 +23,7 @@
       <el-table :data="subjectRows" style="width: 100%" :header-cell-style="{ background: '#F8FAFF', color: '#475569' }">
         <el-table-column prop="subjectName" label="科目" min-width="160" />
         <el-table-column prop="totalQuestions" label="题库题数" width="100" />
+        <el-table-column prop="answeredQuestions" label="去重已做" width="100" />
         <el-table-column prop="totalAnswered" label="累计答题" width="100" />
         <el-table-column label="正确率" width="120">
           <template #default="{ row }">
@@ -104,9 +105,13 @@ async function loadHistory(p) {
 
 const cards = computed(() => {
   const o = stats.value?.overview || {}
+  const distinct = o.answeredQuestions || 0
+  const repeated = Math.max(0, (o.totalAnswered || 0) - distinct)
   return [
     { label: '题目总数', value: o.totalQuestions || 0, color: 'text-gray-900' },
     { label: '累计答题', value: o.totalAnswered || 0, color: 'text-primary' },
+    { label: '已完成题目（去重）', value: distinct, color: 'text-indigo-500' },
+    { label: '重复练习次数', value: repeated, color: 'text-amber-500' },
     { label: '总体正确率', value: (o.accuracy || 0) + '%', color: 'text-emerald-500' },
     { label: '错题本', value: o.wrongCount || 0, color: 'text-red-500' }
   ]

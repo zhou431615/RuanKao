@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -80,8 +82,9 @@ public class QuestionService {
         List<Long> questionIds = result.getContent().stream().map(Question::getId).toList();
         Set<Long> wrongIds = questionIds.isEmpty() ? Set.of() : wrongQuestionRepository.findQuestionIdsByIdIn(questionIds);
         Set<Long> favoriteIds = questionIds.isEmpty() ? Set.of() : favoriteRepository.findQuestionIdsByIdIn(questionIds);
+        Map<Long, Long> practiceCounts = practiceCountMap(questionIds);
         List<QuestionDtos.ListItem> items = result.getContent().stream()
-                .map(q -> toListItem(q, wrongIds, favoriteIds))
+                .map(q -> toListItem(q, wrongIds, favoriteIds, practiceCounts))
                 .toList();
         return new QuestionDtos.PageResponse<>(items, result.getTotalElements(), page, size);
     }
@@ -167,11 +170,12 @@ public class QuestionService {
         List<Long> questionIds = questions.stream().map(Question::getId).toList();
         Set<Long> wrongIds = questionIds.isEmpty() ? Set.of() : wrongQuestionRepository.findQuestionIdsByIdIn(questionIds);
         Set<Long> favoriteIds = questionIds.isEmpty() ? Set.of() : favoriteRepository.findQuestionIdsByIdIn(questionIds);
-        return questions.stream().map(q -> toListItem(q, wrongIds, favoriteIds)).toList();
+        Map<Long, Long> practiceCounts = practiceCountMap(questionIds);
+        return questions.stream().map(q -> toListItem(q, wrongIds, favoriteIds, practiceCounts)).toList();
     }
 
     private List<Question> fetchFromBank(QuestionDtos.PracticeRequest request, boolean random, int limit) {
-        Specification<Question> spec = buildPracticeSpec(request.subjectId(), request.chapterId(), request.type());
+        Specification<Question> spec = buildPracticeSpec(request.subjectId(), request.chapterId(), request.type(), request.difficulty());
         if (random) {
             List<Long> ids = questionRepository.findAll(spec).stream()
                     .map(Question::getId)
@@ -190,7 +194,7 @@ public class QuestionService {
                 .getContent();
     }
 
-    private Specification<Question> buildPracticeSpec(Long subjectId, Long chapterId, QuestionType type) {
+    private Specification<Question> buildPracticeSpec(Long subjectId, Long chapterId, QuestionType type, Integer difficulty) {
         return (root, query, cb) -> {
             List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
             predicates.add(cb.equal(root.get("subject").get("id"), subjectId));
@@ -199,6 +203,9 @@ public class QuestionService {
             }
             if (type != null) {
                 predicates.add(cb.equal(root.get("type"), type));
+            }
+            if (difficulty != null) {
+                predicates.add(cb.equal(root.get("difficulty"), difficulty));
             }
             return cb.and(predicates.toArray(new jakarta.persistence.criteria.Predicate[0]));
         };
@@ -211,6 +218,7 @@ public class QuestionService {
                 .filter(q -> request.chapterId() == null
                         || (q.getChapter() != null && q.getChapter().getId().equals(request.chapterId())))
                 .filter(q -> request.type() == null || q.getType() == request.type())
+                .filter(q -> request.difficulty() == null || q.getDifficulty().equals(request.difficulty()))
                 .toList();
         return limitAndShuffle(questions, random, limit);
     }
@@ -222,6 +230,7 @@ public class QuestionService {
                 .filter(q -> request.chapterId() == null
                         || (q.getChapter() != null && q.getChapter().getId().equals(request.chapterId())))
                 .filter(q -> request.type() == null || q.getType() == request.type())
+                .filter(q -> request.difficulty() == null || q.getDifficulty().equals(request.difficulty()))
                 .toList();
         return limitAndShuffle(questions, random, limit);
     }
@@ -360,19 +369,20 @@ public class QuestionService {
         return ordered;
     }
 
-    private QuestionDtos.ListItem toListItem(Question question) {
-        return toListItem(question,
-                wrongQuestionRepository.existsByQuestionId(question.getId()),
-                favoriteRepository.existsByQuestionId(question.getId()));
+    private Map<Long, Long> practiceCountMap(Collection<Long> questionIds) {
+        if (questionIds == null || questionIds.isEmpty()) {
+            return Map.of();
+        }
+        Map<Long, Long> result = new HashMap<>();
+        for (Object[] row : practiceRecordRepository.countByQuestionIdIn(questionIds)) {
+            result.put(((Number) row[0]).longValue(), ((Number) row[1]).longValue());
+        }
+        return result;
     }
 
-    private QuestionDtos.ListItem toListItem(Question question, Set<Long> wrongIds, Set<Long> favoriteIds) {
-        return toListItem(question,
-                wrongIds.contains(question.getId()),
-                favoriteIds.contains(question.getId()));
-    }
-
-    private QuestionDtos.ListItem toListItem(Question question, boolean wrong, boolean favorite) {
+    private QuestionDtos.ListItem toListItem(Question question, Set<Long> wrongIds, Set<Long> favoriteIds,
+                                             Map<Long, Long> practiceCounts) {
+        long practiced = practiceCounts.getOrDefault(question.getId(), 0L);
         return new QuestionDtos.ListItem(
                 question.getId(),
                 question.getSubject().getId(),
@@ -384,8 +394,10 @@ public class QuestionService {
                 question.getOptions(),
                 question.getDifficulty(),
                 question.getSource(),
-                wrong,
-                favorite
+                wrongIds.contains(question.getId()),
+                favoriteIds.contains(question.getId()),
+                practiced > 0,
+                practiced
         );
     }
 
@@ -420,6 +432,9 @@ public class QuestionService {
                 }
                 if (filter.type() != null) {
                     predicates.add(cb.equal(root.get("type"), filter.type()));
+                }
+                if (filter.difficulty() != null) {
+                    predicates.add(cb.equal(root.get("difficulty"), filter.difficulty()));
                 }
                 if (StringUtils.hasText(filter.keyword())) {
                     predicates.add(cb.like(cb.lower(root.get("stem")),

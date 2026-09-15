@@ -39,6 +39,10 @@ public class WrongQuestion {
     @Column(name = "wrong_count", nullable = false)
     private Integer wrongCount = 1;
 
+    /** 该错题已答对的巩固次数，达到 5 次后自动移出错题本 */
+    @Column(name = "mastered_count", nullable = false, columnDefinition = "int default 0")
+    private Integer masteredCount = 0;
+
     @Column(name = "last_wrong_answer", columnDefinition = "text")
     private String lastWrongAnswer;
 

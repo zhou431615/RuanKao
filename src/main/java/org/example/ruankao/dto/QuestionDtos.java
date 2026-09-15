@@ -34,7 +34,8 @@ public final class QuestionDtos {
     /** 题目列表项（不含答案，避免刷题时泄漏） */
     public record ListItem(Long id, Long subjectId, String subjectName, Long chapterId, String chapterName,
                            QuestionType type, String stem, Map<String, String> options,
-                           Integer difficulty, String source, boolean wrong, boolean favorite) {
+                           Integer difficulty, String source, boolean wrong, boolean favorite,
+                           boolean practiced, long practiceCount) {
     }
 
     /** 题目详情（含答案与解析，用于编辑或提交后查看） */
@@ -49,6 +50,7 @@ public final class QuestionDtos {
             @NotNull(message = "科目不能为空") Long subjectId,
             Long chapterId,
             QuestionType type,
+            Integer difficulty,
             /** normal | wrong | favorite */
             String source,
             /** order | random */
@@ -69,7 +71,11 @@ public final class QuestionDtos {
                                String analysis, QuestionType type,
                                Integer score, String feedback, boolean aiEvaluated,
                                /** 本次答对后是否已从错题本移出 */
-                               boolean removedFromWrongBook) {
+                               boolean removedFromWrongBook,
+                               /** 当前错题巩固次数；不在错题本时为 null */
+                               Integer masteredCount,
+                               /** 提交时该题是否在错题本中 */
+                               boolean inWrongBook) {
     }
 
     /** 答题历史分页项 */
@@ -83,7 +89,7 @@ public final class QuestionDtos {
     }
 
     /** 筛选条件（内部使用） */
-    public record Filter(Long subjectId, Long chapterId, QuestionType type, String keyword) {
+    public record Filter(Long subjectId, Long chapterId, QuestionType type, Integer difficulty, String keyword) {
     }
 
     /** 分页响应 */

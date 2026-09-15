@@ -23,6 +23,11 @@
             <el-option label="问答题" value="ESSAY" />
           </el-select>
         </el-form-item>
+        <el-form-item label="难度">
+          <el-select v-model="form.difficulty" class="w-full" clearable placeholder="全部难度">
+            <el-option v-for="n in 5" :key="n" :label="n + ' 星'" :value="n" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="题目来源">
           <el-radio-group v-model="form.source">
             <el-radio-button value="normal">题库</el-radio-button>
@@ -73,6 +78,9 @@
       <div v-if="current" class="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
         <div class="flex items-center gap-2 mb-4">
           <el-tag effect="dark" size="small" round :type="typeMeta(current.type).color">{{ typeMeta(current.type).label }}</el-tag>
+          <el-tooltip v-if="current.practiced" :content="'已做过 ' + (current.practiceCount || 1) + ' 次'">
+            <el-tag type="info" effect="light" size="small" round>已做过</el-tag>
+          </el-tooltip>
           <span v-if="current.chapterName" class="text-xs text-gray-400">{{ current.chapterName }}</span>
           <el-tag v-if="current.difficulty" size="small" effect="plain" round>难度 {{ '★'.repeat(current.difficulty) }}</el-tag>
           <div class="flex-1"></div>
@@ -149,6 +157,9 @@
           <div v-else-if="result?.removedFromWrongBook" class="text-xs text-emerald-600 mt-2">
             本题已掌握，已自动移出错题本
           </div>
+          <div v-else-if="result?.inWrongBook" class="text-xs text-amber-600 mt-2">
+            已巩固 {{ result?.masteredCount || 0 }}/5，继续答对即可移出错题本
+          </div>
         </div>
 
         <div v-else-if="revealed" class="mt-5 rounded-xl p-4 border"
@@ -167,6 +178,9 @@
           </div>
           <div v-else-if="result?.removedFromWrongBook" class="text-xs text-emerald-600 mt-2">
             本题已掌握，已自动移出错题本
+          </div>
+          <div v-else-if="result?.inWrongBook" class="text-xs text-amber-600 mt-2">
+            已巩固 {{ result?.masteredCount || 0 }}/5，继续答对即可移出错题本
           </div>
         </div>
 
@@ -269,11 +283,12 @@ const index = ref(0)
 const finished = ref(false)
 const elapsed = ref(0)
 let timerId = null
+let autoNextTimer = null
 
 /** 每题作答状态（key = questionId），来回切题时保留已答内容与判分结果 */
 const answers = reactive(new Map())
 
-const form = reactive({ subjectId: null, chapterId: null, type: null, source: 'normal', mode: 'order', limit: 20 })
+const form = reactive({ subjectId: null, chapterId: null, type: null, difficulty: null, source: 'normal', mode: 'order', limit: 20 })
 
 const current = computed(() => list.value[index.value] || null)
 const state = computed(() => (current.value ? answers.get(current.value.id) || null : null))
@@ -386,6 +401,7 @@ onActivated(async () => {
 
 onUnmounted(() => {
   window.removeEventListener('keydown', onKeydown)
+  clearAutoNextTimer()
   stopTimer()
 })
 
@@ -395,7 +411,8 @@ async function start() {
   try {
     const res = await api.fetchPractice({
       subjectId: form.subjectId, chapterId: form.chapterId || undefined,
-      type: form.type || undefined, source: form.source, mode: form.mode, limit: form.limit
+      type: form.type || undefined, difficulty: form.difficulty || undefined,
+      source: form.source, mode: form.mode, limit: form.limit
     })
     if (!res.length) {
       const sourceName = { wrong: '错题本', favorite: '收藏夹' }[form.source] || '该范围'
@@ -475,12 +492,29 @@ async function submit() {
     st.result = res
     st.submitted = true
     st.userAnswer = userAnswer
+    scheduleAutoNext(q)
   } finally {
     submitting.value = false
   }
 }
 
+function clearAutoNextTimer() {
+  if (autoNextTimer) {
+    clearTimeout(autoNextTimer)
+    autoNextTimer = null
+  }
+}
+
+function scheduleAutoNext(q) {
+  clearAutoNextTimer()
+  const delay = q.type === 'ESSAY' ? 1800 : 900
+  autoNextTimer = setTimeout(() => {
+    if (current.value?.id === q.id && revealed.value) next()
+  }, delay)
+}
+
 function redo() {
+  clearAutoNextTimer()
   const st = state.value
   if (!st) return
   st.picked = []
@@ -492,11 +526,13 @@ function redo() {
 }
 
 function goTo(i) {
+  clearAutoNextTimer()
   if (i < 0 || i >= list.value.length) return
   index.value = i
 }
 
 function next() {
+  clearAutoNextTimer()
   if (index.value === list.value.length - 1) { stopTimer(); finished.value = true; return }
   goTo(index.value + 1)
 }
@@ -535,6 +571,7 @@ async function quit() {
 }
 
 function resetSession() {
+  clearAutoNextTimer()
   stopTimer()
   started.value = false
   finished.value = false

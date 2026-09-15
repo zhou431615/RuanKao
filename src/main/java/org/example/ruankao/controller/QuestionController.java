@@ -35,11 +35,12 @@ public class QuestionController {
             @RequestParam(required = false) Long subjectId,
             @RequestParam(required = false) Long chapterId,
             @RequestParam(required = false) String type,
+            @RequestParam(required = false) Integer difficulty,
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
         QuestionDtos.Filter filter = new QuestionDtos.Filter(subjectId, chapterId,
-                parseType(type), keyword);
+                parseType(type), difficulty, keyword);
         return ApiResponse.ok(questionService.page(filter, page, size));
     }
 

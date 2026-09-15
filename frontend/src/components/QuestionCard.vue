@@ -5,6 +5,9 @@
         <el-checkbox v-if="selectable" :model-value="selected" class="!mr-0"
           @change="$emit('update:selected', $event)" />
         <el-tag :type="typeMeta.color" effect="dark" size="small" round>{{ typeMeta.label }}</el-tag>
+        <el-tooltip v-if="question.practiced" :content="'已做过 ' + (question.practiceCount || 1) + ' 次'">
+          <el-tag type="info" effect="light" size="small" round>已做过</el-tag>
+        </el-tooltip>
         <el-tag v-if="question.difficulty" size="small" effect="plain" round>
           难度 {{ '★'.repeat(question.difficulty) }}
         </el-tag>

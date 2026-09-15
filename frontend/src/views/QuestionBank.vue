@@ -58,6 +58,9 @@
           <el-option label="判断题" value="JUDGE" />
           <el-option label="问答题" value="ESSAY" />
         </el-select>
+        <el-select v-model="filter.difficulty" placeholder="全部难度" clearable class="!w-32" @change="onFilterChange">
+          <el-option v-for="n in 5" :key="n" :label="n + ' 星'" :value="n" />
+        </el-select>
         <el-input v-model="filter.keyword" placeholder="搜索题干关键词" clearable class="!w-56"
           @keyup.enter="onFilterChange" @clear="onFilterChange">
           <template #prefix><Search class="w-4 h-4 text-gray-300" /></template>
@@ -258,7 +261,7 @@ const selectedIds = ref([])
 const errors = reactive({})
 const newSubject = reactive({ name: '', description: '' })
 
-const filter = reactive({ subjectId: null, chapterId: null, type: null, keyword: '', page: 1, size: 10 })
+const filter = reactive({ subjectId: null, chapterId: null, type: null, difficulty: null, keyword: '', page: 1, size: 10 })
 const editForm = reactive({
   id: null, subjectId: null, chapterId: null, type: 'SINGLE', stem: '',
   optionList: [], multiAnswer: [], answer: '', analysis: '', difficulty: 3
@@ -282,7 +285,7 @@ onActivated(async () => {
 
 const currentChapters = computed(() => currentSubject.value?.chapters || [])
 const isChoice = computed(() => editForm.type === 'SINGLE' || editForm.type === 'MULTIPLE')
-const hasFilter = computed(() => !!(filter.chapterId || filter.type || filter.keyword))
+const hasFilter = computed(() => !!(filter.chapterId || filter.type || filter.difficulty || filter.keyword))
 const selectedSet = computed(() => new Set(selectedIds.value))
 const pageIds = computed(() => questions.value.map(q => q.id))
 const allSelected = computed(() => pageIds.value.length > 0 && pageIds.value.every(id => selectedSet.value.has(id)))
@@ -317,6 +320,7 @@ function onFilterChange() {
 function resetFilter() {
   filter.chapterId = null
   filter.type = null
+  filter.difficulty = null
   filter.keyword = ''
   onFilterChange()
 }
@@ -349,8 +353,8 @@ async function load() {
   await withLoading(loading, async () => {
     const res = await api.pageQuestions({
       subjectId: filter.subjectId, chapterId: filter.chapterId || undefined,
-      type: filter.type || undefined, keyword: filter.keyword || undefined,
-      page: filter.page, size: filter.size
+      type: filter.type || undefined, difficulty: filter.difficulty || undefined,
+      keyword: filter.keyword || undefined, page: filter.page, size: filter.size
     })
     questions.value = res.content
     total.value = res.total

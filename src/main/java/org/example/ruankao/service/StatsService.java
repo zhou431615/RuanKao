@@ -46,6 +46,7 @@ public class StatsService {
     public StatsDtos.StatsResponse overview() {
         long totalQuestions = questionRepository.count();
         long totalAnswered = practiceRecordRepository.count();
+        long answeredQuestions = practiceRecordRepository.countDistinctQuestionIds();
         long totalCorrect = practiceRecordRepository.countByCorrectTrueAndAnsweredAtAfter(
                 LocalDateTime.of(1970, 1, 1, 0, 0));
 
@@ -57,7 +58,7 @@ public class StatsService {
         StatsDtos.Overview overview = new StatsDtos.Overview(
                 totalQuestions, totalAnswered, totalCorrect,
                 totalAnswered == 0 ? 0 : Math.round(totalCorrect * 1000.0 / totalAnswered) / 10.0,
-                todayAnswered, todayCorrect, wrongCount);
+                todayAnswered, todayCorrect, wrongCount, answeredQuestions);
 
         return new StatsDtos.StatsResponse(overview, dailyTrend(), subjectProgress());
     }

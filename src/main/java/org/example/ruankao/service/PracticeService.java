@@ -26,6 +26,7 @@ import java.util.List;
 public class PracticeService {
 
     private static final Logger log = LoggerFactory.getLogger(PracticeService.class);
+    private static final int WRONG_REMOVAL_MASTERED_THRESHOLD = 5;
 
     private final QuestionRepository questionRepository;
     private final PracticeRecordRepository practiceRecordRepository;
@@ -99,18 +100,27 @@ public class PracticeService {
         record.setSelfScore(finalScore);
         practiceRecordRepository.save(record);
 
-        // 错题本与本次作答同步：答错收录并累计，答对则视为已掌握并移出
+        // 错题本与本次作答同步：答错收录并累计；答对累计巩固次数，做够 5 遍后移出
+        WrongQuestion existingWrong = wrongQuestionRepository.findByQuestionId(question.getId()).orElse(null);
+        Integer masteredCount = existingWrong == null ? null : existingWrong.getMasteredCount();
+        boolean inWrongBook = existingWrong != null;
         boolean removedFromWrongBook = false;
         if (!correct) {
             recordWrong(question, request.userAnswer());
+            masteredCount = existingWrong == null ? 0 : existingWrong.getMasteredCount();
+            inWrongBook = true;
         } else {
-            removedFromWrongBook = clearWrong(question);
+            MasteryResult mastery = recordMastery(question);
+            removedFromWrongBook = mastery.removed();
+            masteredCount = mastery.masteredCount();
+            inWrongBook = mastery.inWrongBook();
         }
 
         log.debug("提交作答: questionId={}, correct={}", question.getId(), correct);
         return new QuestionDtos.SubmitResult(record.getId(), correct,
                 question.getAnswer(), question.getAnalysis(), question.getType(),
-                finalScore, feedback, aiEvaluated, removedFromWrongBook);
+                finalScore, feedback, aiEvaluated, removedFromWrongBook,
+                masteredCount, inWrongBook);
     }
 
     /** 答错自动收录/累计错题本 */
@@ -126,15 +136,24 @@ public class PracticeService {
         wrongQuestionRepository.save(wrong);
     }
 
-    /** 答对后从错题本移除，返回是否确有移除 */
-    private boolean clearWrong(Question question) {
-        return wrongQuestionRepository.findByQuestionId(question.getId())
-                .map(wrong -> {
-                    wrongQuestionRepository.delete(wrong);
-                    log.info("已掌握，移出错题本: questionId={}", question.getId());
-                    return true;
-                })
-                .orElse(false);
+    /** 错题巩固次数达到 5 遍后自动移出错题本，返回本次是否移除 */
+    private MasteryResult recordMastery(Question question) {
+        var wrong = wrongQuestionRepository.findByQuestionId(question.getId()).orElse(null);
+        if (wrong == null) {
+            return new MasteryResult(null, false, false);
+        }
+        int count = (wrong.getMasteredCount() == null ? 0 : wrong.getMasteredCount()) + 1;
+        wrong.setMasteredCount(count);
+        if (count >= WRONG_REMOVAL_MASTERED_THRESHOLD) {
+            wrongQuestionRepository.delete(wrong);
+            log.info("错题已做够 {} 遍，移出错题本: questionId={}", WRONG_REMOVAL_MASTERED_THRESHOLD, question.getId());
+            return new MasteryResult(count, true, true);
+        }
+        wrongQuestionRepository.save(wrong);
+        return new MasteryResult(count, true, false);
+    }
+
+    private record MasteryResult(Integer masteredCount, boolean inWrongBook, boolean removed) {
     }
 
     /** 供 QuestionService 复用的判分入口 */
